@@ -26,10 +26,10 @@ if (!fs.existsSync(projectDir)) {
 app.use(express.static(projectDir));
 
 const dbConfig = {
-    server: process.env.DATABASE_SERVER,
-    database: process.env.DATABASE_NAME,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
+    server: "ExcursionBDCloud.mssql.somee.com",
+    database: "ExcursionBDCloud",
+    user: "YourSneakyLiar_SQLLogin_1",
+    password: "b51odpedu3",
     options: {
       trustServerCertificate: true
     }

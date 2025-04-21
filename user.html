@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeWay - Личный кабинет</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #DFFBF7;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background-color: #B8F6EE;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-icons img {
+            width: 24px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+        .search-bar input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+        }
+        .sidebar {
+            width: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            height: fit-content;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .sidebar img {
+            width: 18px;
+            height: auto;
+        }
+        #go-home {
+            margin-bottom: 10px;
+        }
+        #go-home:hover {
+            text-decoration: underline;
+        }
+        .content {
+            flex-grow: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #B8F6EE;
+            margin: 10px;
+            border-radius: 10px;
+        }
+        .booking-card {
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+            padding: 15px;
+        }
+        .booking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            padding: 20px 0;
+        }
+        .nav-tabs .nav-link.active {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .logout-btn {
+            cursor: pointer;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+        .logout-btn:hover {
+            color: #f44336 !important;
+        }
+        .logout-btn img {
+            transition: transform 0.3s;
+            width: 18px;
+        }
+        .logout-btn:hover img {
+            transform: rotate(180deg);
+        }
+        #my-bookings {
+            padding: 8px 0;
+        }
+        .account-settings-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .account-settings-form .form-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .account-settings-form .form-control {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .account-settings-form .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+        .account-settings-form .btn:hover {
+            background-color: #45a049;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .review-form {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .review-form .form-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .review-form .form-control {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+        }
+        .review-form .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            transition: background-color 0.3s;
+        }
+        .review-form .btn:hover {
+            background-color: #45a049;
+        }
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="logo">
+                <img src="https://i.ibb.co/HDr2vNTm/logo.jpg" alt="PrimeWay Logo">
+                <span>PrimeWay</span>
+            </div>
+            <div class="nav-icons">
+                <img src="https://i.ibb.co/6Rr41bBk/telephone1.png" alt="Телефон">
+                <span id="user-phone-display"></span>
+                <img src="https://i.ibb.co/5gdCQB60/Adress.png" alt="Адрес">
+                <span id="address-text"></span>
+                <img src="https://i.ibb.co/07YYn3j/Map.png" alt="Город">
+                <span id="city-text"></span>
+                <img src="https://i.ibb.co/Lh2GMkjM/user.png" alt="Профиль" id="profile-icon">
+                <span id="username-display"></span>
+            </div>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Москва" id="search-city">
+            <input type="date" id="search-date">
+            <input type="number" placeholder="👤" id="search-persons" min="1" max="100">
+            <button id="search-btn" class="btn btn-success">🔍 Поиск</button>
+        </div>
+
+        <div class="container">
+            <div class="sidebar">
+                <div id="go-home" class="sidebar-item">
+                    <img src="https://i.ibb.co/0jq7Z0P/home-icon.png" alt="На главную">
+                    <span>Вернуться на главную</span>
+                </div>
+                <div id="account-info" class="sidebar-item active">
+                    <img src="https://i.ibb.co/Lh2GMkjM/user.png" alt="Мой аккаунт">
+                    <span>Мой аккаунт</span>
+                </div>
+                <div id="account-settings" class="sidebar-item">
+                    <img src="https://i.ibb.co/HLfH7QnM/image.png" alt="Настройки"> 
+                    <span>Настройка аккаунта</span>
+                </div>
+                <div id="my-bookings" class="sidebar-item">
+                    <!-- Иконка бронирования без текста -->
+                </div>
+                <div id="logout" class="logout-btn">
+                    <img src="https://i.ibb.co/xtZ51W6F/image.png" alt="Выход"> 
+                    <span>Выйти</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- Раздел "Мои бронирования" -->
+                <div id="bookings-content" class="content-section active">
+                    <h2>Мои бронирования</h2>
+                    <button class="btn btn-success mb-3" id="add-booking-btn">+ Добавить бронирование</button>
+                    
+                    <ul class="nav nav-tabs" id="bookingTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#active-bookings">Активные</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#completed-bookings">Завершенные</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#last-trip">Последняя поездка</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="active-bookings">
+                            <div id="active-bookings-list"></div>
+                        </div>
+                        <div class="tab-pane fade" id="completed-bookings">
+                            <div id="completed-bookings-list"></div>
+                        </div>
+                        <div class="tab-pane fade" id="last-trip">
+                            <div id="last-trip-info"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раздел "Настройка аккаунта" -->
+                <div id="settings-content" class="content-section">
+                    <h2>Настройка аккаунта</h2>
+                    <form id="account-settings-form" class="account-settings-form">
+                        <div class="mb-3">
+                            <label for="edit-username" class="form-label">Имя пользователя</label>
+                            <input type="text" class="form-control" id="edit-username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-email" class="form-label">Электронная почта</label>
+                            <input type="email" class="form-control" id="edit-email">
+                        </div>
+                        <button type="submit" class="btn">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 PrimeWay. Все права защищены.</p>
+        </footer>
+
+        <div class="modal fade" id="addBookingModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Добавить бронирование</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="bookingForm">
+                            <div class="mb-3">
+                                <label for="bookingTour" class="form-label">Выберите тур</label>
+                                <select class="form-control" id="bookingTour" required>
+                                    <option value="">-- Выберите тур --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookingDate" class="form-label">Дата</label>
+                                <input type="date" class="form-control" id="bookingDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookingPersons" class="form-label">Количество персон</label>
+                                <input type="number" class="form-control" id="bookingPersons" min="1" max="100" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookingNotes" class="form-label">Дополнительные пожелания</label>
+                                <textarea class="form-control" id="bookingNotes" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" id="submit-booking-btn">Забронировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загрузка данных пользователя
+            function loadUserData() {
+                const username = localStorage.getItem('username') || 'Пользователь';
+                const address = localStorage.getItem('userAddress') || 'Адрес';
+                const city = localStorage.getItem('city') || 'Город';
+                
+                document.getElementById('username-display').textContent = username;
+                document.getElementById('address-text').textContent = address;
+                document.getElementById('city-text').textContent = city;
+                
+                // Заполнение формы настройки аккаунта
+                document.getElementById('edit-username').value = username;
+                document.getElementById('edit-email').value = localStorage.getItem('email') || '';
+            }
+            
+            loadUserData();
+
+            // Установка минимальной даты (сегодня)
+            const today = new Date().toISOString().split('T')[0];
+            const searchDateInput = document.getElementById('search-date');
+            const bookingDateInput = document.getElementById('bookingDate');
+            searchDateInput.setAttribute('min', today);
+            bookingDateInput.setAttribute('min', today);
+
+            // Ограничение на количество людей
+            const searchPersonsInput = document.getElementById('search-persons');
+            const bookingPersonsInput = document.getElementById('bookingPersons');
+            searchPersonsInput.setAttribute('min', '1');
+            searchPersonsInput.setAttribute('max', '100');
+            bookingPersonsInput.setAttribute('min', '1');
+            bookingPersonsInput.setAttribute('max', '100');
+
+            // Переключение между разделами
+            const bookingsContent = document.getElementById('bookings-content');
+            const settingsContent = document.getElementById('settings-content');
+            const accountInfoTab = document.getElementById('account-info');
+            const bookingsTab = document.getElementById('my-bookings');
+            const settingsTab = document.getElementById('account-settings');
+
+            function showSection(sectionToShow, tabToActivate) {
+                [bookingsContent, settingsContent].forEach(section => section.classList.remove('active'));
+                [accountInfoTab, bookingsTab, settingsTab].forEach(tab => tab.classList.remove('active'));
+                sectionToShow.classList.add('active');
+                tabToActivate.classList.add('active');
+            }
+
+            accountInfoTab.addEventListener('click', function() {
+                showSection(bookingsContent, accountInfoTab);
+            });
+
+            bookingsTab.addEventListener('click', function() {
+                showSection(bookingsContent, bookingsTab);
+            });
+
+            settingsTab.addEventListener('click', function() {
+                showSection(settingsContent, settingsTab);
+            });
+
+            // Обработка формы настройки аккаунта
+            document.getElementById('account-settings-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newUsername = document.getElementById('edit-username').value;
+                const newEmail = document.getElementById('edit-email').value;
+
+                localStorage.setItem('username', newUsername);
+                localStorage.setItem('email', newEmail);
+
+                document.getElementById('username-display').textContent = newUsername;
+
+                alert('Данные успешно обновлены!');
+                loadUserData();
+            });
+
+            // Переход на главную страницу
+            document.getElementById('go-home').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
+            // Выход из аккаунта
+            document.getElementById('logout').addEventListener('click', function() {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('email');
+                    window.location.href = 'index.html';
+                }
+            });
+
+            // Поиск туров
+            document.getElementById('search-btn').addEventListener('click', function() {
+                const city = document.getElementById('search-city').value;
+                const date = document.getElementById('search-date').value;
+                const persons = document.getElementById('search-persons').value;
+
+                if (persons < 1 || persons > 100) {
+                    alert('Количество персон должно быть от 1 до 100.');
+                    return;
+                }
+                if (date && new Date(date) < new Date(today)) {
+                    alert('Дата экскурсии не может быть в прошлом.');
+                    return;
+                }
+
+                window.location.href = `tours.html?city=${city}&date=${date}&persons=${persons}`;
+            });
+
+            // Данные о турах
+            const tours = [
+                { id: 1, name: "Петергоф", city: "Санкт-Петербург", price: 5000 },
+                { id: 2, name: "Музей космонавтики", city: "Москва", price: 2500 },
+                { id: 3, name: "Казанский собор", city: "Казань", price: 3800 }
+            ];
+
+            // Заполнение выпадающего списка туров
+            const bookingTourSelect = document.getElementById('bookingTour');
+            tours.forEach(tour => {
+                const option = document.createElement('option');
+                option.value = tour.id;
+                option.textContent = `${tour.name} (${tour.city})`;
+                bookingTourSelect.appendChild(option);
+            });
+
+            // Загрузка бронирований из localStorage
+            let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+            // Отображение бронирований
+            function displayBookings() {
+                const activeBookingsList = document.getElementById('active-bookings-list');
+                const completedBookingsList = document.getElementById('completed-bookings-list');
+                const lastTripInfo = document.getElementById('last-trip-info');
+
+                activeBookingsList.innerHTML = '';
+                completedBookingsList.innerHTML = '';
+                lastTripInfo.innerHTML = '';
+
+                const todayDate = new Date(today);
+                let lastTrip = null;
+
+                bookings.forEach((booking, index) => {
+                    const tour = tours.find(t => t.id == booking.tourId);
+                    const bookingDate = new Date(booking.date);
+                    const isCompleted = bookingDate < todayDate;
+
+                    const bookingCard = document.createElement('div');
+                    bookingCard.classList.add('booking-card');
+                    bookingCard.innerHTML = `
+                        <h5>${tour.name}</h5>
+                        <p><strong>Город:</strong> ${tour.city}</p>
+                        <p><strong>Дата:</strong> ${booking.date}</p>
+                        <p><strong>Количество персон:</strong> ${booking.persons}</p>
+                        <p><strong>Пожелания:</strong> ${booking.notes || 'Нет'}</p>
+                    `;
+
+                    if (isCompleted) {
+                        const reviewForm = document.createElement('div');
+                        reviewForm.classList.add('review-form');
+                        reviewForm.innerHTML = `
+                            <h6>Оставить отзыв</h6>
+                            <form class="review-form-${index}">
+                                <div class="star-rating">
+                                    <input type="radio" name="rating-${index}" id="rating-5-${index}" value="5" required>
+                                    <label for="rating-5-${index}">★</label>
+                                    <input type="radio" name="rating-${index}" id="rating-4-${index}" value="4">
+                                    <label for="rating-4-${index}">★</label>
+                                    <input type="radio" name="rating-${index}" id="rating-3-${index}" value="3">
+                                    <label for="rating-3-${index}">★</label>
+                                    <input type="radio" name="rating-${index}" id="rating-2-${index}" value="2">
+                                    <label for="rating-2-${index}">★</label>
+                                    <input type="radio" name="rating-${index}" id="rating-1-${index}" value="1">
+                                    <label for="rating-1-${index}">★</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="review-text-${index}" class="form-label">Ваш отзыв</label>
+                                    <textarea class="form-control" id="review-text-${index}" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn">Отправить отзыв</button>
+                            </form>
+                        `;
+                        bookingCard.appendChild(reviewForm);
+
+                        reviewForm.querySelector(`.review-form-${index}`).addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const rating = document.querySelector(`input[name="rating-${index}"]:checked`).value;
+                            const reviewText = document.getElementById(`review-text-${index}`).value;
+                            const reviewDate = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                            const review = {
+                                user: localStorage.getItem('username') || 'Пользователь',
+                                tourId: tour.id,
+                                rating: parseInt(rating),
+                                text: reviewText,
+                                date: reviewDate
+                            };
+
+                            let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+                            reviews.push(review);
+                            localStorage.setItem('reviews', JSON.stringify(reviews));
+
+                            alert('Отзыв успешно отправлен!');
+                            reviewForm.remove();
+                        });
+
+                        completedBookingsList.appendChild(bookingCard);
+
+                        if (!lastTrip || bookingDate > new Date(lastTrip.date)) {
+                            lastTrip = { ...booking, tour };
+                        }
+                    } else {
+                        activeBookingsList.appendChild(bookingCard);
+                    }
+                });
+
+                if (lastTrip) {
+                    lastTripInfo.innerHTML = `
+                        <div class="booking-card">
+                            <h5>${lastTrip.tour.name}</h5>
+                            <p><strong>Город:</strong> ${lastTrip.tour.city}</p>
+                            <p><strong>Дата:</strong> ${lastTrip.date}</p>
+                            <p><strong>Количество персон:</strong> ${lastTrip.persons}</p>
+                            <p><strong>Пожелания:</strong> ${lastTrip.notes || 'Нет'}</p>
+                        </div>
+                    `;
+                } else {
+                    lastTripInfo.innerHTML = '<p>У вас пока нет завершенных поездок.</p>';
+                }
+            }
+
+            // Обработка бронирования
+            document.getElementById('submit-booking-btn').addEventListener('click', function() {
+                const tourId = document.getElementById('bookingTour').value;
+                const date = document.getElementById('bookingDate').value;
+                const persons = document.getElementById('bookingPersons').value;
+                const notes = document.getElementById('bookingNotes').value;
+
+                if (persons < 1 || persons > 100) {
+                    alert('Количество персон должно быть от 1 до 100.');
+                    return;
+                }
+                if (date && new Date(date) < new Date(today)) {
+                    alert('Дата экскурсии не может быть в прошлом.');
+                    return;
+                }
+
+                const booking = {
+                    tourId: parseInt(tourId),
+                    date,
+                    persons: parseInt(persons),
+                    notes
+                };
+
+                bookings.push(booking);
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+                displayBookings();
+
+                alert('Бронирование успешно!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addBookingModal'));
+                modal.hide();
+            });
+
+            // Открытие модального окна для добавления бронирования
+            document.getElementById('add-booking-btn').addEventListener('click', function() {
+                const modal = new bootstrap.Modal(document.getElementById('addBookingModal'));
+                modal.show();
+            });
+
+            // Инициализация отображения бронирований
+            displayBookings();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeWay – Туры и экскурсии</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E0F7F5;
+        }
+        header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #C9F1ED;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+        }
+        .header-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            position: relative;
+        }
+        .header-item img {
+            width: 30px;
+            height: auto;
+        }
+        .header-item span {
+            font-size: 16px;
+            color: #333;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .background-container {
+            position: relative;
+            width: calc(100% - 20px);
+            height: 60vh;
+            margin: 10px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://sochi.ru/upload/medialibrary/347/34788aa79c16c18530b1d98ad51b1dc1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .background-text {
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 90%;
+        }
+        .search-bar input, .search-bar button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .search-bar button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .about {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 10px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            margin-top: 30px;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .city-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .city-dropdown.show {
+            display: block;
+        }
+        .city-dropdown .dropdown-item {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        .city-dropdown .dropdown-item:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .auth-buttons .btn {
+            flex: 1;
+            max-width: 200px;
+        }
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .review-card:hover {
+            transform: translateY(-5px);
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .review-user {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .review-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .review-rating {
+            color: #FFD700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .review-text {
+            font-size: 1rem;
+            color: #333;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .background-text {
+                font-size: 2rem;
+            }
+            .search-bar {
+                flex-direction: column;
+            }
+            .auth-buttons {
+                flex-direction: column;
+            }
+            .auth-buttons .btn {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <img src="https://i.ibb.co/HDr2vNTm/logo.jpg" alt="PrimeWay Logo" class="logo">
+            <div class="header-item">
+                <img src="https://i.ibb.co/6Rr41bBk/telephone1.png" alt="Телефон">
+                <span id="user-phone-display">+7 (926) 865-86-12</span>
+            </div>
+            <div class="header-item" id="address-section">
+                <img src="https://i.ibb.co/5gdCQB60/Adress.png" alt="Адрес">
+                <span id="address-text">Адрес</span>
+            </div>
+            <div class="header-item" id="city-section">
+                <img src="https://i.ibb.co/07YYn3j/Map.png" alt="Город">
+                <span id="city-text">Город</span>
+                <div class="city-dropdown" id="city-dropdown">
+                    <div class="dropdown-item" data-city="Москва">Москва</div>
+                    <div class="dropdown-item" data-city="Санкт-Петербург">Санкт-Петербург</div>
+                    <div class="dropdown-item" data-city="Казань">Казань</div>
+                    <div class="dropdown-item" data-city="Сочи">Сочи</div>
+                    <div class="dropdown-item" data-city="Екатеринбург">Екатеринбург</div>
+                    <div class="dropdown-item" data-city="Новосибирск">Новосибирск</div>
+                    <div class="dropdown-item" data-city="Краснодар">Краснодар</div>
+                    <div class="dropdown-item" data-city="Нижний Новгород">Нижний Новгород</div>
+                    <div class="dropdown-item" data-city="Владивосток">Владивосток</div>
+                    <div class="dropdown-item" data-city="Ростов-на-Дону">Ростов-на-Дону</div>
+                    <div class="dropdown-item" data-city="Самара">Самара</div>
+                    <div class="dropdown-item" data-city="Уфа">Уфа</div>
+                    <div class="dropdown-item" data-city="Омск">Омск</div>
+                    <div class="dropdown-item" data-city="Челябинск">Челябинск</div>
+                    <div class="dropdown-item" data-city="Калининград">Калининград</div>
+                    <div class="dropdown-item" data-city="Иркутск">Иркутск</div>
+                    <div class="dropdown-item" data-city="Волгоград">Волгоград</div>
+                    <div class="dropdown-item" data-city="Ярославль">Ярославль</div>
+                    <div class="dropdown-item" data-city="Тверь">Тверь</div>
+                    <div class="dropdown-item" data-city="Пермь">Пермь</div>
+                </div>
+            </div>
+            <div class="header-item" id="auth-section">
+                <img src="https://i.ibb.co/Lh2GMkjM/user.png" alt="Войти" id="user-icon">
+                <span id="auth-text">Войти/зарегистрироваться</span>
+            </div>
+        </header>
+
+        <div class="background-container">
+            <h1 class="background-text">Путешествуйте с PrimeWay</h1>
+        </div>
+
+        <div class="container">
+            <section class="search-bar">
+                <input type="text" id="city" placeholder="Город" value="Москва">
+                <input type="text" id="museum" placeholder="Название музея">
+                <input type="date" id="tour-date">
+                <input type="number" id="persons" placeholder="👤" min="1" max="100">
+                <button id="search-btn">🔍 Найти тур</button>
+            </section>
+
+            <section class="about">
+                <p>PrimeWay – ваш надежный проводник в мире путешествий по России! Мы организуем увлекательные туры в музеи, заповедники и на экскурсионные маршруты...</p>
+                <a href="tours.html" class="btn btn-success mt-3">Посмотреть все экскурсии</a>
+            </section>
+
+            <h2 class="my-4" style="color: #333; font-weight: bold;">Популярные направления</h2>
+            <div class="row" id="popular-tours">
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm" style="border-radius: 10px; border-color: #4CAF50;" data-tour-id="1">
+                        <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/6b/da/3e/peterhof-palace-and-garden.jpg?w=1000&h=-1&s=1" class="card-img-top" alt="Петергоф">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #4CAF50; font-weight: bold;">Петергоф</h5>
+                            <p class="card-text">Погрузитесь в атмосферу императорской России!</p>
+                            <p class="card-text"><strong>Цена:</strong> от 5 000 руб.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm" style="border-radius: 10px; border-color: #4CAF50;" data-tour-id="2">
+                        <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/63/04/f1/caption.jpg?w=1000&h=-1&s=1" class="card-img-top" alt="Музей космонавтики">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #4CAF50; font-weight: bold;">Музей космонавтики</h5>
+                            <p class="card-text">Погрузитесь в историю покорения космоса!</p>
+                            <p class="card-text"><strong>Цена:</strong> от 2 500 руб.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm" style="border-radius: 10px; border-color: #4CAF50;" data-tour-id="3">
+                        <img src="http://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/dd/8b/33/caption.jpg?w=1000&h=-1&s=1" class="card-img-top" alt="Казанский собор">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #4CAF50; font-weight: bold;">Казанский собор</h5>
+                            <p class="card-text">Откройте древнюю историю и культуру Казани!</p>
+                            <p class="card-text"><strong>Цена:</strong> от 3 800 руб.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-5" style="border-top: 2px solid #333; opacity: 1;" />
+
+            <h2 class="my-4" style="color: #333; font-weight: bold;">Отзывы</h2>
+            <div class="row" id="reviews">
+                <!-- Отзывы будут добавлены через JavaScript -->
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 PrimeWay. Все права защищены.</p>
+        </footer>
+
+        <!-- Модальное окно для авторизации -->
+        <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="authModalTitle">Вход / Регистрация</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="authForm">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Имя пользователя</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Пароль</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <div class="mb-3" id="email-field" style="display: none;">
+                                <label for="email" class="form-label">Электронная почта</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                            <div class="auth-buttons">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Войти</button>
+                                <button type="button" class="btn btn-secondary" id="register-btn">Зарегистрироваться</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для ввода геолокации -->
+        <div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Введите ваш адрес</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addressForm">
+                            <div class="mb-3">
+                                <label for="user-address" class="form-label">Ваш адрес</label>
+                                <input type="text" class="form-control" id="user-address" placeholder="Введите ваш адрес" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загрузка сохраненных данных пользователя
+            function loadUserData() {
+                const username = localStorage.getItem('username') || 'Пользователь';
+                const phone = localStorage.getItem('phone') || '+7 (926) 865-86-12';
+                const address = localStorage.getItem('userAddress') || 'Адрес';
+                const city = localStorage.getItem('city') || 'Город';
+                
+                document.getElementById('user-phone-display').textContent = phone;
+                document.getElementById('address-text').textContent = address;
+                document.getElementById('city-text').textContent = city;
+                document.getElementById('auth-text').textContent = username !== 'Пользователь' ? username : 'Войти/зарегистрироваться';
+            }
+            
+            loadUserData();
+
+            // Установка минимальной даты (сегодня)
+            const today = new Date().toISOString().split('T')[0];
+            const tourDateInput = document.getElementById('tour-date');
+            tourDateInput.setAttribute('min', today);
+
+            // Ограничение на количество людей
+            const personsInput = document.getElementById('persons');
+            personsInput.setAttribute('min', '1');
+            personsInput.setAttribute('max', '100');
+
+            // Проверка авторизации
+            function checkAuthStatus() {
+                const token = localStorage.getItem('token');
+                const username = localStorage.getItem('username');
+                if (token && username) {
+                    document.getElementById('auth-text').textContent = username;
+                }
+            }
+            checkAuthStatus();
+
+            // Модальное окно для авторизации
+            const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+            // Модальное окно для ввода адреса
+            const addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+
+            // Клик по иконке пользователя
+            document.getElementById('user-icon').addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (localStorage.getItem('token')) {
+                    window.location.href = 'user.html';
+                } else {
+                    resetAuthForm();
+                    authModal.show();
+                }
+            });
+
+            // Клик по имени пользователя (после авторизации)
+            document.getElementById('auth-text').addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (localStorage.getItem('token')) {
+                    window.location.href = 'user.html';
+                } else {
+                    resetAuthForm();
+                    authModal.show();
+                }
+            });
+
+            // Клик по всей секции авторизации
+            document.getElementById('auth-section').addEventListener('click', function() {
+                if (!localStorage.getItem('token')) {
+                    resetAuthForm();
+                    authModal.show();
+                }
+            });
+
+            function resetAuthForm() {
+                document.getElementById('authForm').reset();
+                document.getElementById('email-field').style.display = 'none';
+                document.getElementById('register-btn').textContent = 'Зарегистрироваться';
+                document.getElementById('submitBtn').textContent = 'Войти';
+                document.getElementById('authModalTitle').textContent = 'Вход / Регистрация';
+            }
+
+            // Переключение между входом и регистрацией
+            document.getElementById('register-btn').addEventListener('click', function() {
+                const registerBtn = document.getElementById('register-btn');
+                const isRegistering = registerBtn.textContent === "Зарегистрироваться";
+                
+                if (isRegistering) {
+                    registerBtn.textContent = "Уже есть аккаунт? Войти";
+                    document.getElementById('submitBtn').textContent = "Зарегистрироваться";
+                    document.getElementById('email-field').style.display = "block";
+                    document.getElementById('authModalTitle').textContent = "Регистрация";
+                } else {
+                    registerBtn.textContent = "Зарегистрироваться";
+                    document.getElementById('submitBtn').textContent = "Войти";
+                    document.getElementById('email-field').style.display = "none";
+                    document.getElementById('authModalTitle').textContent = "Вход";
+                }
+            });
+
+            // Отправка формы авторизации
+            document.getElementById('authForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const isRegistering = document.getElementById('submitBtn').textContent === "Зарегистрироваться";
+                
+                if (isRegistering) {
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    const email = document.getElementById('email').value;
+                    
+                    try {
+                        const response = await fetch('http://localhost:3000/api/register', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ username, password, email })
+                        });
+                        
+                        const result = await response.json();
+                        if (response.ok) {
+                            localStorage.setItem('token', 'simulated-token');
+                            localStorage.setItem('username', username);
+                            localStorage.setItem('email', email);
+                            
+                            authModal.hide();
+                            document.getElementById('auth-text').textContent = username;
+                            loadUserData();
+                            alert('Регистрация успешна!');
+                        } else {
+                            alert(result.error || 'Ошибка при регистрации');
+                        }
+                    } catch (err) {
+                        console.error('Error during registration:', err);
+                        alert('Ошибка при регистрации: ' + err.message);
+                    }
+                } else {
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // Здесь можно добавить логику для входа (например, проверка через API)
+                    localStorage.setItem('token', 'simulated-token');
+                    localStorage.setItem('username', username);
+                    
+                    authModal.hide();
+                    document.getElementById('auth-text').textContent = username;
+                    loadUserData();
+                }
+            });
+
+            // Выпадающий список для выбора города
+            const citySection = document.getElementById('city-section');
+            const cityText = document.getElementById('city-text');
+            const cityDropdown = document.getElementById('city-dropdown');
+
+            citySection.addEventListener('click', function(e) {
+                e.stopPropagation();
+                cityDropdown.classList.toggle('show');
+            });
+
+            // Обработка выбора города
+            document.querySelectorAll('#city-dropdown .dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const selectedCity = this.getAttribute('data-city');
+                    cityText.textContent = selectedCity;
+                    document.getElementById('city').value = selectedCity;
+                    localStorage.setItem('city', selectedCity);
+                    cityDropdown.classList.remove('show');
+                });
+            });
+
+            // Закрытие выпадающего списка при клике вне его
+            document.addEventListener('click', function(e) {
+                if (!citySection.contains(e.target)) {
+                    cityDropdown.classList.remove('show');
+                }
+            });
+
+            // Открытие модального окна для ввода адреса
+            document.getElementById('address-section').addEventListener('click', function() {
+                addressModal.show();
+            });
+
+            // Обработка формы адреса
+            document.getElementById('addressForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const userAddress = document.getElementById('user-address').value;
+                if (userAddress) {
+                    document.getElementById('address-text').textContent = userAddress;
+                    localStorage.setItem('userAddress', userAddress);
+                    addressModal.hide();
+                    loadUserData();
+                } else {
+                    alert('Пожалуйста, введите адрес');
+                }
+            });
+
+            // Поиск туров
+            document.getElementById('search-btn').addEventListener('click', function() {
+                const city = document.getElementById('city').value;
+                const date = document.getElementById('tour-date').value;
+                const persons = document.getElementById('persons').value;
+
+                if (persons < 1 || persons > 100) {
+                    alert('Количество персон должно быть от 1 до 100.');
+                    return;
+                }
+                if (date && new Date(date) < new Date(today)) {
+                    alert('Дата экскурсии не может быть в прошлом.');
+                    return;
+                }
+
+                window.location.href = `tours.html?city=${city}&date=${date}&persons=${persons}`;
+            });
+
+            // Переход на страницу тура при клике
+            document.querySelectorAll('#popular-tours .card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const tourId = this.dataset.tourId;
+                    window.location.href = `tours.html?tourId=${tourId}`;
+                });
+            });
+
+            // Отображение отзывов из localStorage
+            const reviewsList = document.getElementById('reviews');
+            let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+            // Добавляем статические отзывы, если их нет в localStorage
+            if (reviews.length === 0) {
+                reviews = [
+                    {
+                        user: "Анна С.",
+                        tourId: 1,
+                        rating: 5,
+                        text: "Экскурсия в Петергоф была просто невероятной! Гид рассказал много интересного, а организация на высшем уровне. Обязательно вернусь снова!",
+                        date: "15 марта 2025"
+                    },
+                    {
+                        user: "Михаил К.",
+                        tourId: 2,
+                        rating: 4,
+                        text: "Музей космонавтики впечатлил! Очень познавательно, но хотелось бы больше интерактива. В целом, тур отличный, рекомендую.",
+                        date: "20 февраля 2025"
+                    },
+                    {
+                        user: "Екатерина П.",
+                        tourId: 3,
+                        rating: 5,
+                        text: "Казанский собор — это must-see! Гид был очень внимателен, рассказал много исторических фактов. PrimeWay, вы лучшие!",
+                        date: "5 января 2025"
+                    }
+                ];
+                localStorage.setItem('reviews', JSON.stringify(reviews));
+            }
+
+            // Отображаем отзывы
+            reviews.forEach(review => {
+                const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+                const reviewCard = document.createElement('div');
+                reviewCard.classList.add('col-md-4', 'mb-4');
+                reviewCard.innerHTML = `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-user">${review.user}</span>
+                            <span class="review-date">${review.date}</span>
+                        </div>
+                        <div class="review-rating">${stars}</div>
+                        <p class="review-text">${review.text}</p>
+                    </div>
+                `;
+                reviewsList.appendChild(reviewCard);
+            });
+        });
+    </script>
+</body>
+</html>

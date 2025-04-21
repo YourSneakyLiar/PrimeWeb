@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeWay - Экскурсии</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E0F7F5;
+        }
+        header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #C9F1ED;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+        }
+        .header-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .header-item img {
+            width: 30px;
+            height: auto;
+        }
+        .header-item span {
+            font-size: 16px;
+            color: #333;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .tour-filter {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 10px;
+        }
+        .tour-details {
+            margin-top: 20px;
+        }
+        .tour-details img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .tour-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .tour-card:hover {
+            transform: translateY(-5px);
+        }
+        .tour-card img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+        }
+        .tour-card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .tour-card-text {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            line-clamp: 3;
+            display: box;
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            margin-top: 30px;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .btn-back {
+            margin: 20px 10px; /* Изменено: теперь 20px сверху/снизу и 10px слева/справа */
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block; /* Добавлено для лучшего контроля отступов */
+            width: fit-content; /* Добавлено, чтобы кнопка не растягивалась на всю ширину */
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .tour-filter {
+                flex-direction: column;
+            }
+            .btn-back {
+                margin: 15px 10px; /* Уменьшенные отступы для мобильных устройств */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <img src="https://i.ibb.co/HDr2vNTm/logo.jpg" alt="PrimeWay Logo" class="logo">
+            <div class="header-item">
+                <img src="https://i.ibb.co/6Rr41bBk/telephone1.png" alt="Телефон">
+                <span id="user-phone-display">+7 (926) 865-86-12</span>
+            </div>
+            <div class="header-item">
+                <img src="https://i.ibb.co/5gdCQB60/Adress.png" alt="Адрес">
+                <span id="address-text">Адрес</span>
+            </div>
+            <div class="header-item">
+                <img src="https://i.ibb.co/07YYn3j/Map.png" alt="Город">
+                <span id="city-text">Город</span>
+            </div>
+            <div class="header-item" id="auth-section">
+                <img src="https://i.ibb.co/Lh2GMkjM/user.png" alt="Профиль">
+                <span id="username-display">Личный кабинет</span>
+            </div>
+        </header>
+
+        <button class="btn-back" onclick="window.location.href='index.html'">Вернуться на главную</button>
+
+        <div class="container">
+            <div class="tour-filter">
+                <h2>Найти экскурсию</h2>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="filter-city" placeholder="Город">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" id="filter-date">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" id="filter-persons" placeholder="Количество персон">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100" id="filter-btn">Фильтровать</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="my-4" style="color: #333; font-weight: bold;">Доступные экскурсии</h2>
+            <div class="row" id="tours-list">
+                <!-- Туры будут загружаться динамически -->
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 PrimeWay. Все права защищены.</p>
+        </footer>
+
+        <div class="modal fade" id="tourModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tourModalTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="tourModalBody">
+                        <!-- Детали тура -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="book-tour-btn">Забронировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загрузка данных пользователя
+            function loadUserData() {
+                const username = localStorage.getItem('username') || 'Пользователь';
+                const phone = localStorage.getItem('phone') || '+7 (926) 865-86-12';
+                const address = localStorage.getItem('userAddress') || 'Адрес';
+                const city = localStorage.getItem('city') || 'Город';
+                
+                document.getElementById('username-display').textContent = username;
+                document.getElementById('user-phone-display').textContent = phone;
+                document.getElementById('address-text').textContent = address;
+                document.getElementById('city-text').textContent = city;
+            }
+            
+            loadUserData();
+
+            const tourModal = new bootstrap.Modal(document.getElementById('tourModal'));
+
+            // Установка минимальной даты (сегодня)
+            const today = new Date().toISOString().split('T')[0];
+            const tourDateInput = document.getElementById('filter-date');
+            tourDateInput.setAttribute('min', today);
+
+            // Ограничение на количество людей
+            const personsInput = document.getElementById('filter-persons');
+            personsInput.setAttribute('min', '1');
+            personsInput.setAttribute('max', '100');
+
+            // Переход в личный кабинет
+            document.getElementById('auth-section').addEventListener('click', function() {
+                window.location.href = 'user.html';
+            });
+
+            // Установка фильтров из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlCity = urlParams.get('city');
+            const date = urlParams.get('date');
+            const persons = urlParams.get('persons');
+            const selectedTourId = urlParams.get('tourId');
+
+            document.getElementById('filter-city').value = urlCity || '';
+            document.getElementById('filter-date').value = date || '';
+            document.getElementById('filter-persons').value = persons || '';
+
+            loadTours();
+
+            function loadTours(filters = {}) {
+                const toursData = [
+                    {
+                        id: 1,
+                        title: "Петергоф",
+                        description: "Погрузитесь в атмосферу императорской России! Вас ждут великолепные фонтаны, роскошные дворцы и увлекательные истории о жизни русских царей.",
+                        price: 5000,
+                        startDate: "2025-04-15",
+                        image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/6b/da/3e/peterhof-palace-and-garden.jpg?w=1000&h=-1&s=1",
+                        guideId: 3
+                    },
+                    {
+                        id: 2,
+                        title: "Музей космонавтики",
+                        description: "Погрузитесь в историю покорения космоса! Узнайте о первых полетах, космонавтах и технологиях, которые изменили мир.",
+                        price: 2500,
+                        startDate: "2025-04-20",
+                        image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/63/04/f1/caption.jpg?w=1000&h=-1&s=1",
+                        guideId: 3
+                    },
+                    {
+                        id: 3,
+                        title: "Казанский собор",
+                        description: "Откройте древнюю историю и культуру Казани! Посетите Казанский собор и узнайте о его значении в истории России.",
+                        price: 3800,
+                        startDate: "2025-04-25",
+                        image: "http://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/dd/8b/33/caption.jpg?w=1000&h=-1&s=1",
+                        guideId: 3
+                    },
+                    {
+                        id: 4,
+                        title: "Эрмитаж",
+                        description: "Погрузитесь в мир искусства и истории! Эрмитаж в Санкт-Петербурге — один из крупнейших музеев мира с уникальными экспонатами.",
+                        price: 4500,
+                        startDate: "2025-04-30",
+                        image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/83/ff/2a/es-casi-imposible-tomar.jpg?w=1000&h=-1&s=1",
+                        guideId: 3
+                    },
+                    {
+                        id: 5,
+                        title: "Тур по Золотому Кольцу",
+                        description: "Исторический тур по древним городам России: Суздаль, Владимир, Ярославль и другие. Узнайте о традициях и культуре!",
+                        price: 12500,
+                        startDate: "2025-05-05",
+                        image: "https://img.championat.com/s/732x488/news/big/n/i/zolotoe-kolco-rossii_17267482561172836782.jpg",
+                        guideId: 3
+                    },
+                    {
+                        id: 6,
+                        title: "Тур в Сочи",
+                        description: "Морской тур с экскурсиями по Сочи: Красная Поляна, Олимпийский парк и пляжный отдых.",
+                        price: 28400,
+                        startDate: "2025-05-10",
+                        image: "https://akvaresort.ru/wp-content/uploads/2023/05/sochi-4.jpg",
+                        guideId: 3
+                    }
+                ];
+
+                let filteredTours = toursData;
+                if (filters.city) {
+                    filteredTours = filteredTours.filter(tour => tour.title.toLowerCase().includes(filters.city.toLowerCase()));
+                }
+                if (filters.date) {
+                    filteredTours = filteredTours.filter(tour => tour.startDate === filters.date);
+                }
+                if (filters.persons) {
+                    filteredTours = filteredTours;
+                }
+
+                renderTours(filteredTours);
+
+                // Автоматическое открытие модального окна, если указан tourId
+                if (selectedTourId) {
+                    const tour = toursData.find(t => t.id == selectedTourId);
+                    if (tour) showTourDetails(tour);
+                }
+            }
+
+            function renderTours(tours) {
+                const toursList = document.getElementById('tours-list');
+                toursList.innerHTML = tours.map(tour => `
+                    <div class="col-md-4 mb-4">
+                        <div class="tour-card" data-tour-id="${tour.id}">
+                            <img src="${tour.image}" class="card-img-top" alt="${tour.title}">
+                            <div class="tour-card-body">
+                                <h5 class="card-title" style="color: #4CAF50; font-weight: bold;">${tour.title}</h5>
+                                <p class="tour-card-text">${tour.description}</p>
+                                <p class="card-text"><strong>Цена:</strong> от ${tour.price} руб.</p>
+                                <p class="card-text"><strong>Дата:</strong> ${new Date(tour.startDate).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.tour-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const tourId = this.dataset.tourId;
+                        const tour = tours.find(t => t.id == tourId);
+                        showTourDetails(tour);
+                    });
+                });
+            }
+
+            function showTourDetails(tour) {
+                document.getElementById('tourModalTitle').textContent = tour.title;
+                document.getElementById('tourModalBody').innerHTML = `
+                    <div class="tour-details">
+                        <img src="${tour.image}" alt="${tour.title}">
+                        <p>${tour.description}</p>
+                        <p><strong>Цена:</strong> ${tour.price} руб.</p>
+                        <p><strong>Дата начала:</strong> ${new Date(tour.startDate).toLocaleDateString()}</p>
+                        <p><strong>Гид:</strong> <a href="guide-profile.html?guideId=${tour.guideId}">Иван Петров</a></p>
+                    </div>
+                `;
+                document.getElementById('book-tour-btn').onclick = () => bookTour(tour.id);
+                tourModal.show();
+            }
+
+            function bookTour(tourId) {
+                if (!localStorage.getItem('token')) {
+                    alert('Пожалуйста, войдите в систему для бронирования');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                alert(`Тур ${tourId} забронирован!`);
+                tourModal.hide();
+                window.location.href = 'user.html';
+            }
+
+            document.getElementById('filter-btn').addEventListener('click', function() {
+                const filters = {
+                    city: document.getElementById('filter-city').value,
+                    date: document.getElementById('filter-date').value,
+                    persons: document.getElementById('filter-persons').value
+                };
+
+                if (filters.persons < 1 || filters.persons > 100) {
+                    alert('Количество персон должно быть от 1 до 100.');
+                    return;
+                }
+                if (filters.date && new Date(filters.date) < new Date(today)) {
+                    alert('Дата экскурсии не может быть в прошлом.');
+                    return;
+                }
+
+                window.location.href = `tours.html?city=${filters.city}&date=${filters.date}&persons=${filters.persons}`;
+            });
+        });
+    </script>
+</body>
+</html>

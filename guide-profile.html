@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeWay - Профиль гида</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Стилизация профиля гида */
+        .guide-profile {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 10px;
+        }
+        .guide-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto;
+            display: block;
+        }
+        .guide-info {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .guide-tours {
+            margin-top: 30px;
+        }
+        .rating-stars {
+            color: #FFD700;
+            font-size: 24px;
+        }
+        .btn-back {
+            margin: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-back:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <!-- Логотип -->
+            <img src="https://i.ibb.co/HDr2vNTm/logo.jpg" alt="PrimeWay Logo" class="logo">
+            
+            <!-- Телефон пользователя -->
+            <div class="header-item">
+                <img src="https://i.ibb.co/6Rr41bBk/telephone1.png" alt="Телефон">
+                <span id="user-phone-display">+7 (926) 865-86-12</span>
+            </div>
+            
+            <!-- Адрес пользователя -->
+            <div class="header-item">
+                <img src="https://i.ibb.co/5gdCQB60/Adress.png" alt="Адрес">
+                <span id="address-text">Адрес</span>
+            </div>
+            
+            <!-- Город пользователя -->
+            <div class="header-item">
+                <img src="https://i.ibb.co/07YYn3j/Map.png" alt="Город">
+                <span id="city-text">Город</span>
+            </div>
+            
+            <!-- Секция профиля пользователя -->
+            <div class="header-item" id="auth-section">
+                <img src="https://i.ibb.co/Lh2GMkjM/user.png" alt="Профиль">
+                <span id="username-display">Вернуться в кабинет</span>
+            </div>
+        </header>
+
+        <!-- Кнопка возврата на главную страницу -->
+        <button class="btn-back" onclick="window.location.href='index.html'">Вернуться на главную</button>
+
+        <div class="container">
+            <div class="guide-profile">
+                <!-- Аватар гида -->
+                <img src="https://i.ibb.co/Lh2GMkjM/user.png" alt="Guide Avatar" class="guide-avatar">
+                
+                <!-- Основная информация о гиде -->
+                <div class="guide-info">
+                    <h2 id="guide-name">Имя гида</h2>
+                    <p id="guide-email">email@example.com</p>
+                    <div class="rating-stars" id="guide-rating">★★★★★</div>
+                    <p><strong>Количество туров:</strong> <span id="guide-tour-count">0</span></p>
+                </div>
+
+                <!-- Список туров гида -->
+                <div class="guide-tours">
+                    <h3>Проводимые экскурсии</h3>
+                    <div class="row" id="guide-tours-list">
+                        <!-- Список туров -->
+                    </div>
+                </div>
+
+                <!-- Отзывы -->
+                <div class="guide-reviews mt-4">
+                    <h3>Отзывы</h3>
+                    <div id="guide-reviews-list">
+                        <!-- Отзывы -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Подвал -->
+        <footer>
+            <p>© 2025 PrimeWay. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <!-- Подключение Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загрузка данных пользователя
+            function loadUserData() {
+                const username = localStorage.getItem('username') || 'Пользователь'; // Имя пользователя
+                const phone = localStorage.getItem('phone') || '+7 (926) 865-86-12'; // Телефон
+                const address = localStorage.getItem('userAddress') || 'Адрес'; // Адрес
+                const city = localStorage.getItem('city') || 'Город'; // Город
+                
+                // Обновление элементов страницы данными
+                document.getElementById('username-display').textContent = username;
+                document.getElementById('user-phone-display').textContent = phone;
+                document.getElementById('address-text').textContent = address;
+                document.getElementById('city-text').textContent = city;
+            }
+            
+            loadUserData();
+
+            // Установка сегодняшней даты для последующей проверки
+            const today = new Date().toISOString().split('T')[0];
+
+            // При нажатии на блок профиля — переход в личный кабинет
+            document.getElementById('auth-section').addEventListener('click', function() {
+                window.location.href = 'user.html';
+            });
+
+            // Загрузка информации о гиде
+            loadGuideProfile();
+
+            function loadGuideProfile() {
+                const urlParams = new URLSearchParams(window.location.search); // Получение параметров URL
+                const guideId = urlParams.get('guideId') || 3; // Получение guideId из URL, по умолчанию 3
+
+                // Симулированные данные гида (как из БД)
+                const guideData = {
+                    name: "Иван Петров",
+                    email: "ivan.guide@example.com",
+                    rating: 4.8,
+                    tours: [
+                        {
+                            id: 1,
+                            title: "Тур по Золотому Кольцу",
+                            price: 12500,
+                            startDate: "2025-04-15"
+                        },
+                        {
+                            id: 2,
+                            title: "Экскурсия по Санкт-Петербургу",
+                            price: 18700,
+                            startDate: "2025-04-20"
+                        }
+                    ],
+                    reviews: [
+                        {
+                            user: "user1",
+                            rating: 5,
+                            comment: "Отличный гид, очень интересно рассказывает!"
+                        }
+                    ]
+                };
+
+                // Заполнение блока с информацией о гиде
+                document.getElementById('guide-name').textContent = guideData.name;
+                document.getElementById('guide-email').textContent = guideData.email;
+                document.getElementById('guide-rating').textContent = '★'.repeat(Math.round(guideData.rating));
+                document.getElementById('guide-tour-count').textContent = guideData.tours.length;
+
+                // Формирование HTML для списка туров
+                const toursList = document.getElementById('guide-tours-list');
+                toursList.innerHTML = guideData.tours.map(tour => `
+                    <div class="col-md-4 mb-4">
+                        <div class="card" data-tour-id="${tour.id}">
+                            <div class="card-body">
+                                <h5 class="card-title">${tour.title}</h5>
+                                <p class="card-text"><strong>Дата:</strong> ${new Date(tour.startDate).toLocaleDateString()}</p>
+                                <p class="card-text"><strong>Цена:</strong> ${tour.price} руб.</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Формирование HTML для списка отзывов
+                const reviewsList = document.getElementById('guide-reviews-list');
+                reviewsList.innerHTML = guideData.reviews.length > 0 ? 
+                    guideData.reviews.map(review => `
+                        <div class="card review-card mb-3">
+                            <div class="card-body">
+                                <h6>${review.user}</h6>
+                                <div class="rating-stars">${'★'.repeat(review.rating)}</div>
+                                <p>${review.comment}</p>
+                            </div>
+                        </div>
+                    `).join('') : 
+                    '<div class="alert alert-info">Отзывов пока нет</div>';
+
+                // Обработка клика по карточке тура
+                document.querySelectorAll('.card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const tourId = this.dataset.tourId;
+                        const tour = guideData.tours.find(t => t.id == tourId);
+                        if (tour && new Date(tour.startDate) < new Date(today)) {
+                            alert('Этот тур уже прошел. Выберите другой тур с будущей датой.');
+                            return;
+                        }
+                        // Переход на страницу тура
+                        window.location.href = `tours.html?tourId=${tourId}`;
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
